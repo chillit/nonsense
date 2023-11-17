@@ -14,6 +14,7 @@ class _PeopleListState extends State<PeopleList> {
   final TextEditingController _searchController = TextEditingController();
   final DatabaseReference _database = FirebaseDatabase().reference().child('users');
   List<Map<String, dynamic>> _dataList = [];
+  bool isGRAY = false;
 
   @override
   void initState() {
@@ -47,51 +48,52 @@ class _PeopleListState extends State<PeopleList> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        centerTitle:true,
+        title: Text("NIS Security"),
         automaticallyImplyLeading: false,
-        title: Center(child: Text('NEskuchnoAta')),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 12.0),
-            child: IconButton(
-              icon: Icon(Icons.menu),
-              onPressed: () {
-                _scaffoldKey.currentState!.openEndDrawer();
-              },
-            ),
-          ),
-        ],
+
+        leading: IconButton( // Use leading property instead of actions
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            _scaffoldKey.currentState!.openDrawer();
+          },
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.only(top: 15,bottom: 15),
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-              child: TextField(
-                controller: _searchController,
-                onChanged: (_) {
-                  setState(() {}); // Update the UI when the search text changes
-                },
-                decoration: InputDecoration(
-                  hintText: 'Поиск курсов',
-                  suffixIcon: Icon(Icons.search),
-                  contentPadding: EdgeInsets.all(10),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      style: BorderStyle.none,
-                      width: 0,
+
+              padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20.0,right: 20),
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: (_) {
+                    setState(() {}); // Update the UI when the search text changes
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Поиск',
+                    suffixIcon: Icon(Icons.search),
+                    contentPadding: EdgeInsets.all(10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        style: BorderStyle.none,
+                        width: 0,
+                      ),
                     ),
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 242, 241, 247),
                   ),
-                  filled: true,
-                  fillColor: Color.fromARGB(255, 242, 241, 247),
                 ),
               ),
             ),
             Expanded(
               child: ListView.builder(
                 physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.only(top: 10.0),
                 itemCount: _dataList.length,
                 itemBuilder: (context, index) {
                   Map<String, dynamic> value = _dataList[index];
@@ -121,23 +123,28 @@ class _PeopleListState extends State<PeopleList> {
                     return SizedBox.shrink();
                   }
 
-                  return PersonTile(
-                    role: value["PostName"],
-                    maxin: value["MaxIn"],
-                    minin: value["MinIn"],
-                    maxout: value["MaxOut"],
-                    clas: value["DivisionName"],
-                    fio: value['DisplayNameAll'],
-                    inSchool: value['Status'] == "1",
-                    curator: value['Manager'],
-                  );
+
+                    isGRAY = !isGRAY;
+                    return PersonTile(
+                      isGray: isGRAY,
+                      role: value["PostName"],
+                      maxin: value["MaxIn"],
+                      minin: value["MinIn"],
+                      maxout: value["MaxOut"],
+                      clas: value["DivisionName"],
+                      fio: value['DisplayNameAll'],
+                      inSchool: value['Status'] == "1",
+                      curator: value['Manager'],
+                    );
+
+
                 },
               ),
             ),
           ],
         ),
       ),
-      endDrawer: Drawer(
+      drawer: Drawer(
         child: Column(
           children: <Widget>[
             Padding(padding: EdgeInsetsDirectional.only(start: 16),
@@ -331,103 +338,91 @@ class _PeopleListState extends State<PeopleList> {
 
 
 class PersonTile extends StatefulWidget {
-  const PersonTile({super.key, required this.fio, required this.inSchool, required this.curator, required this.clas, required this.maxin, required this.maxout, required this.minin, required this.role});
+   PersonTile({super.key,required this.isGray, required this.fio, required this.inSchool, required this.curator, required this.clas, required this.maxin, required this.maxout, required this.minin, required this.role});
   final String fio, curator,clas,maxin,maxout,minin,role;
   final bool inSchool;
+  bool isGray;
   @override
   State<PersonTile> createState() => _PersonTileState();
 }
 
 class _PersonTileState extends State<PersonTile> {
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        showDialog(context: context, builder: (BuildContext context){
-          return PersonInfoDialog(fio: widget.fio, curator: widget.curator, inSchool: widget.inSchool,);
-        });
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return PersonInfoDialog(
+              fio: widget.fio,
+              curator: widget.curator,
+              inSchool: widget.inSchool,
+            );
+          },
+        );
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5,),
+        padding: const EdgeInsets.symmetric(vertical: 0),
         child: SizedBox(
           width: double.infinity,
           child: Material(
-            elevation: 4,
-            borderRadius: BorderRadius.circular(10),
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              padding: EdgeInsets.only(top: 0,bottom: 0,right: 15),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Color.fromARGB(255, 242, 241, 247),
-                  border: Border.all(color: Colors.grey, width: 0.5)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                borderRadius: BorderRadius.circular(00),
+                color: widget.isGray?Colors.grey[250]:Color.fromARGB(255, 242, 241, 247),
+                border: Border.all(color: Colors.transparent, width: 0),
+              ),
+              child: Row(
+
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            widget.fio,
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
+                  // Glowing stick
+                  Container(
+                    height: 70,
+                    width: 10,
+                    decoration: BoxDecoration(
+                      color: widget.inSchool ? Colors.green : Colors.red,
+                      boxShadow: [
+                        BoxShadow(
+                          color: widget.inSchool ? Colors.green : Colors.red,
+                          blurRadius: 0,
+                          spreadRadius: 0,
                         ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: SizedBox(
-                          width: double.infinity,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            'Куратор:',
-                            textAlign: TextAlign.end,
-                            style: TextStyle(fontSize: 20,),
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            widget.inSchool ? "В школе" : "Не в школе",
-                            style: TextStyle(fontSize: 15,),
-                          ),
+                  SizedBox(width: 10), // Add spacing between the stick and text
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.fio,
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: SizedBox(
-                          width: double.infinity,
+                        SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Text(
+                              widget.inSchool ? "В школе" : "Не в школе",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            SizedBox(width: 20),
+                            Text(
+                              'Куратор: ${widget.curator}',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ],
                         ),
-                      ),
-                      Expanded(
-                        flex: 5,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            widget.curator,
-                            textAlign: TextAlign.end,
-                            style: TextStyle(fontSize: 15,),
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

@@ -24,6 +24,7 @@ class MyApp extends StatefulWidget {
 
   @override
   State<MyApp> createState() => _MyAppState();
+
 }
 
 class _MyAppState extends State<MyApp> {
@@ -32,7 +33,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 
-      title: 'NEskuchnoAta',
+      title: 'NIS Security',
       theme: ThemeData(
         fontFamily: 'Futura',
         primarySwatch: Colors.blue,
