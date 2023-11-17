@@ -7,16 +7,11 @@ class PersonInfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
       child: Container(
-        decoration: BoxDecoration(
-
-          borderRadius: BorderRadius.circular(10),
-        ),
         width: 500,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -43,7 +38,7 @@ class PersonInfoDialog extends StatelessWidget {
                         Align(
                           alignment: AlignmentDirectional(0, -1),
                           child: Material(
-                            color: Color.fromRGBO(47, 16, 91, 1),
+                            color: Colors.white,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
@@ -58,36 +53,34 @@ class PersonInfoDialog extends StatelessWidget {
                                   children: [
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 10, 0, 14),
+                                          10, 0, 0, 0),
                                       child: IconButton(
                                         hoverColor: Colors.transparent,
                                         color: Colors.transparent,
                                         icon: Icon(
-                                          Icons.arrow_back_ios_rounded,
-                                          color: Colors.white,
-                                          size: 32,
+                                          Icons.arrow_back_ios,
+                                          color: Colors.black,
+                                          size: 24,
                                         ),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
                                       ),
                                     ),
-
                                     Expanded(
                                       child: Padding(
                                         padding:
                                             EdgeInsetsDirectional.fromSTEB(
-                                                15, 15, 0, 17),
+                                                30, 0, 0, 0),
                                         child: SizedBox(
                                           width: double.infinity,
-                                          height: 25,
                                           child: Text(
                                             fio,
-                                            // inSchool?"В школе": "Не в школе",
                                             softWrap: true,
                                             style: TextStyle(
+                                              fontFamily: 'Poppins',
                                               fontSize: 24,
-                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ),
@@ -100,86 +93,97 @@ class PersonInfoDialog extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Color.fromRGBO(47, 16, 91, 1), // Color of the border
-                              width: 2, // Width of the border
-                            ),
-
-                            borderRadius: BorderRadius.vertical(bottom:Radius.circular(10),),
-                            color: Color.fromRGBO(47, 16, 91, 1),
-                          ),
-
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 7,right: 7,bottom: 7),
-                            child: Container(
-
-                              height: 180,
-                              decoration: BoxDecoration(
-
-                                color: Colors.white,
-                                borderRadius: BorderRadius.vertical(bottom:Radius.circular(10) ),
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Align(
-                                    alignment: AlignmentDirectional(-1, 0),
-                                    child: Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          30, 14, 70, 0),
-                                      child: Text(
-                                        'Куратор: $curator',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                        ),
-                                      ),
+                          height: 180,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Align(
+                                alignment: AlignmentDirectional(-1, 0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      50, 15, 70, 0),
+                                  child: Text(
+                                    'Куратор: $curator',
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 18,
                                     ),
                                   ),
-                                  SizedBox(height: 10),
-                                  Padding(
-                                    padding: EdgeInsetsDirectional.fromSTEB(
-                                        18, 0, 60, 20),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          height: 20,
-                                          width: 3,
-                                          decoration: BoxDecoration(
-                                            color: inSchool ? Colors.green : Colors.red,
-                                            boxShadow: inSchool
-                                                ? [
-                                              BoxShadow(
-                                                color: Colors.green,
-                                                blurRadius: 7.0,
-                                                spreadRadius: 2.0,
-                                              ),
-                                            ]
-                                                : [
-                                              BoxShadow(
-                                                color: Colors.red,
-                                                blurRadius: 7.0,
-                                                spreadRadius: 2.0,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          inSchool ? "В школе" : "Не в школе",
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                          ),
-                                        ),
-                                      ],
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              Align(
+                                alignment: AlignmentDirectional(-1, 0),
+                                child: Padding(
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      50, 0, 70, 20),
+                                  child: Text(
+                                    inSchool ? "В школе" : "Не в школе",
+                                    style: TextStyle(
+                                      fontFamily: 'Poppins',
+                                      fontSize: 18,
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
-
+                        // Container(
+                        //   height: 100,
+                        //   decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(10),
+                        //     color: Colors.white54,
+                        //   ),
+                        //   child: Padding(
+                        //     padding:
+                        //         EdgeInsetsDirectional.fromSTEB(50, 0, 50, 50),
+                        //     child: ElevatedButton(
+                        //       onPressed: count != max
+                        //           ? () {
+                        //               AwesomeDialog(
+                        //                 context: context,
+                        //                 dialogType: DialogType.success,
+                        //                 animType: AnimType.bottomSlide,
+                        //                 showCloseIcon: false,
+                        //                 title: 'Успешно!',
+                        //                 desc: 'Вы успешно записались на курс!!',
+                        //                 width: 500,
+                        //                 btnOkText: 'Хорошо',
+                        //                 btnOkOnPress: () {
+                        //                   Navigator.of(context).pop();
+                        //                 },
+                        //               ).show();
+                        //             }
+                        //           : null,
+                        //       style: ElevatedButton.styleFrom(
+                        //         padding: EdgeInsets.symmetric(horizontal: 24),
+                        //         primary: count == max
+                        //             ? Colors.grey
+                        //             : DarkPurple, // Replace with your desired button color
+                        //         elevation: 3,
+                        //         shape: RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.circular(8),
+                        //         ),
+                        //       ),
+                        //       child: Row(
+                        //         mainAxisAlignment: MainAxisAlignment.center,
+                        //         crossAxisAlignment: CrossAxisAlignment.center,
+                        //         children: [
+                        //           Text(
+                        //             'Записаться',
+                        //             style: TextStyle(
+                        //               fontWeight: FontWeight.w100,
+                        //               fontFamily: 'Poppins',
+                        //               color: Colors.white,
+                        //               fontSize: 16,
+                        //             ),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
