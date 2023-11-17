@@ -15,7 +15,7 @@ void main() async{
           appId: "1:706356993842:web:33aeedb99d2c40e0f7012b",
           measurementId: "G-G5NP5SBK8P")
   );
-  runApp(MyApp(home: PeopleList()));
+  runApp(MyApp(home: shan()));
 }
 class MyApp extends StatefulWidget {
   final Widget home;
@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
 
-      home: PeopleList(),
+      home: widget.home,
     );
   }
 }

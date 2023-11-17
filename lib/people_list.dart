@@ -18,25 +18,11 @@ class _PeopleListState extends State<PeopleList> {
   @override
   void initState() {
     super.initState();
-    _fetchData();
-  }
-  Future<void> _fetchData() async {
-    try {
-      DatabaseEvent dataSnapshot = await _database.once();
-      if (dataSnapshot.snapshot.value != null) {
-        List<dynamic> dataList = dataSnapshot.snapshot.value as List<dynamic>;
-        setState(() {
-          _dataList = List<Map<String, dynamic>>.from(dataList);
-        });
-      }
-    } catch (error) {
-      print('Error fetching data: $error');
-    }
   }
   bool InSchool = true; // Track whether the user is a student or not
   List<String> classes = ['7', '8', '9', '10', '11', '12'];
   List<String> letters = ['A', 'B', 'C', 'D', 'E'];
-  String? selectedClass = "7";
+  String? selectedClass;
   String? selectedLetter;
   List<String> roles = ["Ученик", "Куратор", "Учитель", "Тех-персонал", "Администрация"];
   List<String> selectedRoles = [];
@@ -143,7 +129,7 @@ class _PeopleListState extends State<PeopleList> {
                         }
 
                         // Filter based on inSchool status
-                        if (InSchool && value['Status'] != "1") {
+                        if (InSchool && value['Status'] == "1") {
                           return Container();
                         }
 
@@ -187,8 +173,6 @@ class _PeopleListState extends State<PeopleList> {
                 onChanged: (bool value) {
                   setState(() {
                     InSchool = value;
-                    selectedClass =
-                        null; // Reset selected class when switching between student and non-student
                   });
                 },
               ),
