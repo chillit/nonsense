@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
 
-      home: this.widget.home,
+      home: PeopleList(),
     );
   }
 }

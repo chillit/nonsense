@@ -7,11 +7,16 @@ class PersonInfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
       child: Container(
+        decoration: BoxDecoration(
+
+          borderRadius: BorderRadius.circular(10),
+        ),
         width: 500,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -49,7 +54,7 @@ class PersonInfoDialog extends StatelessWidget {
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                  CrossAxisAlignment.center,
                                   children: [
                                     Padding(
                                       padding: EdgeInsetsDirectional.fromSTEB(
@@ -70,18 +75,18 @@ class PersonInfoDialog extends StatelessWidget {
                                     Expanded(
                                       child: Padding(
                                         padding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                15, 15, 0, 17),
+                                        EdgeInsetsDirectional.fromSTEB(
+                                            15, 15, 0, 17),
                                         child: SizedBox(
-                                          height: 25,
                                           width: double.infinity,
+                                          height: 25,
                                           child: Text(
                                             fio,
+                                            // inSchool?"В школе": "Не в школе",
                                             softWrap: true,
                                             style: TextStyle(
-                                              color: Colors.white,
                                               fontSize: 24,
-
+                                              color: Colors.white,
                                             ),
                                           ),
                                         ),
@@ -123,7 +128,6 @@ class PersonInfoDialog extends StatelessWidget {
                                       child: Text(
                                         'Куратор: $curator',
                                         style: TextStyle(
-
                                           fontSize: 18,
                                         ),
                                       ),
@@ -172,6 +176,7 @@ class PersonInfoDialog extends StatelessWidget {
                             ),
                           ),
                         ),
+
                       ],
                     ),
                   ),
