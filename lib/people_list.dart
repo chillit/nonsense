@@ -120,7 +120,7 @@ class _PeopleListState extends State<PeopleList> {
                         String clas = value["DivisionName"].toString().toLowerCase();
                         String searchText =
                             _searchController.text.toLowerCase();
-                        if ("${fio} ${clas}".contains(searchText)) {
+                        if (!"${fio} ${clas}".contains(searchText)) {
                           return Container(); // Hide if not matching search text
                         }
 
@@ -149,6 +149,7 @@ class _PeopleListState extends State<PeopleList> {
                         isGRAY = !isGRAY;
 
                         return PersonTile(
+                          index: index.toString(),
                           isGray: isGRAY,
                           role: value["PostName"],
                           maxin: value["MaxIn"],
@@ -409,8 +410,8 @@ class PersonTile extends StatefulWidget {
       required this.maxin,
       required this.maxout,
       required this.minin,
-      required this.role});
-  final String fio, curator, clas, maxin, maxout, minin, role;
+      required this.role, required this.index});
+  final String fio, curator, clas, maxin, maxout, minin, role, index;
   final bool inSchool;
   bool isGray;
   @override
@@ -418,6 +419,18 @@ class PersonTile extends StatefulWidget {
 }
 
 class _PersonTileState extends State<PersonTile> {
+  late bool isChecked;
+
+  final DatabaseReference _databaseReference =
+  FirebaseDatabase.instance.reference();
+  @override
+  void initState() {
+    super.initState();
+    // Initialize isChecked based on the inSchool property
+    isChecked = !widget.inSchool;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -457,7 +470,7 @@ class _PersonTileState extends State<PersonTile> {
                     height: 70,
                     width: 10,
                     decoration: BoxDecoration(
-                      color: widget.inSchool ?  Colors.red: Colors.green,
+                      color: isChecked ?  Colors.red: Colors.green,
                       boxShadow: [
                         BoxShadow(
                           color: widget.inSchool ?  Colors.red :Colors.green ,
@@ -480,7 +493,7 @@ class _PersonTileState extends State<PersonTile> {
                         Row(
                           children: [
                             Text(
-                              widget.inSchool ? "В школе" : "Не в школе",
+                              isChecked ? "В школе" : "Не в школе",
                               style: TextStyle(fontSize: 15),
                             ),
                             SizedBox(width: 20),
@@ -492,6 +505,17 @@ class _PersonTileState extends State<PersonTile> {
                         ),
                       ],
                     ),
+                  ),
+                  Checkbox(
+                    value: isChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isChecked = value!;
+                        _databaseReference
+                            .child('users/${widget.index}/Status')
+                            .set(isChecked ? 0 : 1);
+                      });
+                    },
                   ),
                 ],
               ),
