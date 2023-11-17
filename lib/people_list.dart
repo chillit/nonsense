@@ -50,7 +50,7 @@ class _PeopleListState extends State<PeopleList> {
       appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
-        title: Center(child: Text('NIS Security')),
+        title: Center(child: Container(height:140, width:150, child: Image.asset('assets/logo2.png',fit: BoxFit.contain))),
         leading: IconButton( // Use leading property instead of actions
           icon: Icon(Icons.menu),
           onPressed: () {

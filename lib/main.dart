@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:nonsense/Instuctions.dart';
 import 'package:nonsense/people_list.dart';
 import 'package:nonsense/Login_page.dart';
 import 'package:nonsense/shan.dart';
@@ -32,14 +33,14 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 
-      title: 'NEskuchnoAta',
+      title: 'NIS Security',
       theme: ThemeData(
         fontFamily: 'Futura',
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
 
-      home: PeopleList(),
+      home: InstructionPage(),
     );
   }
 }
