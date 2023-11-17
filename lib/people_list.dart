@@ -12,35 +12,25 @@ class PeopleList extends StatefulWidget {
 
 class _PeopleListState extends State<PeopleList> {
   final TextEditingController _searchController = TextEditingController();
-  final DatabaseReference _database = FirebaseDatabase().reference().child('users');
-  List<Map<String, dynamic>> _dataList = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchData();
   }
-
-  Future<void> _fetchData() async {
-    try {
-      DatabaseEvent dataSnapshot = await _database.once();
-      if (dataSnapshot.snapshot.value != null) {
-        List<dynamic> dataList = dataSnapshot.snapshot.value as List<dynamic>;
-        setState(() {
-          _dataList = List<Map<String, dynamic>>.from(dataList);
-        });
-      }
-    } catch (error) {
-      print('Error fetching data: $error');
-    }
-  }
-  bool InSchool = true; // Track whether the user is a student or not
+  bool InSchool = false; // Track whether the user is a student or not
   List<String> classes = ['7', '8', '9', '10', '11', '12'];
   List<String> letters = ['A', 'B', 'C', 'D', 'E'];
-  String? selectedClass = "7";
+  String? selectedClass;
   String? selectedLetter;
-  List<String> roles = ["Ученик", "Куратор", "Учитель", "Тех-персонал", "Администрация"];
+  List<String> roles = [
+    "Ученик",
+    "Куратор",
+    "Учитель",
+    "Тех-персонал",
+    "Администрация"
+  ];
   List<String> selectedRoles = [];
+  bool includeInternat = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -66,7 +56,8 @@ class _PeopleListState extends State<PeopleList> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
               child: TextField(
                 controller: _searchController,
                 onChanged: (_) {
@@ -88,65 +79,92 @@ class _PeopleListState extends State<PeopleList> {
                 ),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.all(10.0),
-                itemCount: _dataList.length,
-                itemBuilder: (context, index) {
-                  Map<String, dynamic> value = _dataList[index];
-
-                  // Filter the list based on the search text
-                  String fio = value['DisplayNameAll'].toString().toLowerCase();
-                  String searchText = _searchController.text.toLowerCase();
-                  if (!fio.contains(searchText)) {
-                    return SizedBox.shrink(); // Hide if not matching search text
+            StreamBuilder(
+                stream: FirebaseDatabase.instance.ref().child('users').onValue,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
                   }
-
-                  // Combine class number and letter
-                  String combinedClass = "$selectedClass$selectedLetter";
-
-                  // Filter based on selected class
-                  if (selectedClass != null && combinedClass != value["DivisionName"]) {
-                    return Container();
+                  if (snapshot.data!.snapshot.value.runtimeType !=
+                      List<dynamic>) {
+                    return Center(
+                      child: Text('Ошибка'),
+                    );
                   }
+                  List<dynamic> _dataList =
+                      snapshot.data?.snapshot.value as List<dynamic>;
+                  return Expanded(
+                    child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      padding: EdgeInsets.all(10.0),
+                      itemCount: _dataList.length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> value = _dataList[index];
 
-                  // Filter based on selected roles
-                  if (selectedRoles.isNotEmpty && !selectedRoles.contains(value['PostName'])) {
-                    return SizedBox.shrink();
-                  }
+                        // Filter the list based on the search text
+                        String fio =
+                            value['DisplayNameAll'].toString().toLowerCase();
+                        String searchText =
+                            _searchController.text.toLowerCase();
+                        if (!fio.contains(searchText)) {
+                          return Container(); // Hide if not matching search text
+                        }
 
-                  // Filter based on inSchool status
-                  if (InSchool && value['Status'] != "1") {
-                    return SizedBox.shrink();
-                  }
+                        // Combine class number and letter
+                        String combinedClass = "$selectedClass$selectedLetter";
 
-                  return PersonTile(
-                    role: value["PostName"],
-                    maxin: value["MaxIn"],
-                    minin: value["MinIn"],
-                    maxout: value["MaxOut"],
-                    clas: value["DivisionName"],
-                    fio: value['DisplayNameAll'],
-                    inSchool: value['Status'] == "1",
-                    curator: value['Manager'],
+                        // Filter based on selected class
+                        if ((selectedRoles.contains('Ученик') || selectedRoles.contains('Ученик инт'))
+                          && selectedClass != null &&
+                            selectedLetter != null &&
+                            combinedClass != value["DivisionName"]) {
+                          return Container();
+                        }
+
+                        // Filter based on selected roles
+                        if (selectedRoles.isNotEmpty &&
+                            !selectedRoles.contains(value['PostName'])) {
+                          return Container();
+                        }
+
+                        // Filter based on inSchool status
+                        if (InSchool && value['Status'] != "1") {
+                          return Container();
+                        }
+
+                        return PersonTile(
+                          role: value["PostName"],
+                          maxin: value["MaxIn"],
+                          minin: value["MinIn"],
+                          maxout: value["MaxOut"],
+                          clas: value["DivisionName"],
+                          fio: value['DisplayNameAll'],
+                          inSchool: value['Status'] == "1",
+                          curator: value['Manager'],
+                        );
+                      },
+                    ),
                   );
-                },
-              ),
-            ),
+                }),
           ],
         ),
       ),
       endDrawer: Drawer(
         child: Column(
           children: <Widget>[
-            Padding(padding: EdgeInsetsDirectional.only(start: 16),
+            Padding(
+              padding: EdgeInsetsDirectional.only(start: 16),
               child: Text(
                 'Фильтры:',
                 softWrap: true,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black,fontFamily: 'Futura'),
-              ),),
+                style: TextStyle(color: Colors.black, fontFamily: 'Futura'),
+              ),
+            ),
             ListTile(
               title: Text('В школе'),
               trailing: Switch(
@@ -154,7 +172,8 @@ class _PeopleListState extends State<PeopleList> {
                 onChanged: (bool value) {
                   setState(() {
                     InSchool = value;
-                    selectedClass = null; // Reset selected class when switching between student and non-student
+                    selectedClass =
+                        null; // Reset selected class when switching between student and non-student
                   });
                 },
               ),
@@ -162,19 +181,21 @@ class _PeopleListState extends State<PeopleList> {
             Wrap(
               spacing: 8.0,
               runSpacing: 16.0,
-              children: roles.map((role) => FilterChip(
-                label: Text(role),
-                selected: selectedRoles.contains(role),
-                onSelected: (bool selected) {
-                  setState(() {
-                    if (selected) {
-                      selectedRoles.add(role);
-                    } else {
-                      selectedRoles.remove(role);
-                    }
-                  });
-                },
-              )).toList(),
+              children: roles
+                  .map((role) => FilterChip(
+                        label: Text(role),
+                        selected: selectedRoles.contains(role),
+                        onSelected: (bool selected) {
+                          setState(() {
+                            if (selected) {
+                              selectedRoles.add(role);
+                            } else {
+                              selectedRoles.remove(role);
+                            }
+                          });
+                        },
+                      ))
+                  .toList(),
             ),
             if (selectedRoles.contains("Ученик")) ...[
               SizedBox(height: 10),
@@ -203,7 +224,8 @@ class _PeopleListState extends State<PeopleList> {
                               selectedClass = newValue;
                             });
                           },
-                          items: classes.map<DropdownMenuItem<String>>((String value) {
+                          items: classes
+                              .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(value),
@@ -221,7 +243,8 @@ class _PeopleListState extends State<PeopleList> {
                               selectedLetter = newValue;
                             });
                           },
-                          items: letters.map<DropdownMenuItem<String>>((String value) {
+                          items: letters
+                              .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(value),
@@ -232,17 +255,37 @@ class _PeopleListState extends State<PeopleList> {
                     ],
                   ),
                 ),
+                ListTile(
+                  title: Text('Включать интернатовцев'),
+                  trailing: Switch(
+                    value: includeInternat,
+                    onChanged: (bool value) {
+                      setState(() {
+                        includeInternat = value;
+                      });
+                      if (includeInternat) {
+                        selectedRoles.add('Ученик инт');
+                      } else {
+                        selectedRoles.remove('Ученик инт');
+                      }
+                    },
+                  ),
+                ),
               ],
             ],
-            SizedBox(height: 15,),
+            SizedBox(
+              height: 15,
+            ),
             Padding(
-              padding: EdgeInsetsDirectional.only(start: 16,end: 16),
+              padding: EdgeInsetsDirectional.only(start: 16, end: 16),
               child: Divider(
                 thickness: 0.5,
                 color: Colors.grey[700],
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Padding(
               padding: EdgeInsetsDirectional.only(start: 20, end: 20),
               child: ElevatedButton(
@@ -255,7 +298,8 @@ class _PeopleListState extends State<PeopleList> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey, // Замените на ваш цвет по вашему выбору
+                  backgroundColor:
+                      Colors.grey, // Замените на ваш цвет по вашему выбору
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -274,37 +318,49 @@ class _PeopleListState extends State<PeopleList> {
                 ),
               ),
             ),
-            SizedBox(height: 15,),
+            SizedBox(
+              height: 15,
+            ),
             Row(
               children: [
-                SizedBox(width: 16,),
+                SizedBox(
+                  width: 16,
+                ),
                 Expanded(
                   child: Divider(
                     thickness: 0.5,
                     color: Colors.grey[700],
                   ),
                 ),
-                SizedBox(width: 6,),
-                Text('ОПАСНАЯ ЗОНА',style: TextStyle(color: Colors.red),),
-                SizedBox(width: 6,),
+                SizedBox(
+                  width: 6,
+                ),
+                Text(
+                  'ОПАСНАЯ ЗОНА',
+                  style: TextStyle(color: Colors.red),
+                ),
+                SizedBox(
+                  width: 6,
+                ),
                 Expanded(
                   child: Divider(
                     thickness: 0.5,
                     color: Colors.grey[700],
                   ),
                 ),
-                SizedBox(width: 16,),
+                SizedBox(
+                  width: 16,
+                ),
               ],
             ),
-            SizedBox(height: 16,),
+            SizedBox(
+              height: 16,
+            ),
             Padding(
-              padding: EdgeInsetsDirectional.only(start: 20,end: 20),
-              child: ElevatedButton(onPressed:
-                  (){
-              },
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red
-                ),
+              padding: EdgeInsetsDirectional.only(start: 20, end: 20),
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -319,9 +375,9 @@ class _PeopleListState extends State<PeopleList> {
                       ),
                     ),
                   ],
-                ),),
+                ),
+              ),
             ),
-
           ],
         ),
       ),
@@ -329,10 +385,18 @@ class _PeopleListState extends State<PeopleList> {
   }
 }
 
-
 class PersonTile extends StatefulWidget {
-  const PersonTile({super.key, required this.fio, required this.inSchool, required this.curator, required this.clas, required this.maxin, required this.maxout, required this.minin, required this.role});
-  final String fio, curator,clas,maxin,maxout,minin,role;
+  const PersonTile(
+      {super.key,
+      required this.fio,
+      required this.inSchool,
+      required this.curator,
+      required this.clas,
+      required this.maxin,
+      required this.maxout,
+      required this.minin,
+      required this.role});
+  final String fio, curator, clas, maxin, maxout, minin, role;
   final bool inSchool;
   @override
   State<PersonTile> createState() => _PersonTileState();
@@ -342,13 +406,21 @@ class _PersonTileState extends State<PersonTile> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        showDialog(context: context, builder: (BuildContext context){
-          return PersonInfoDialog(fio: widget.fio, curator: widget.curator, inSchool: widget.inSchool,);
-        });
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return PersonInfoDialog(
+                fio: widget.fio,
+                curator: widget.curator,
+                inSchool: widget.inSchool,
+              );
+            });
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5,),
+        padding: const EdgeInsets.symmetric(
+          vertical: 5,
+        ),
         child: SizedBox(
           width: double.infinity,
           child: Material(
@@ -372,7 +444,8 @@ class _PersonTileState extends State<PersonTile> {
                           width: double.infinity,
                           child: Text(
                             widget.fio,
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
@@ -389,7 +462,9 @@ class _PersonTileState extends State<PersonTile> {
                           child: Text(
                             'Куратор:',
                             textAlign: TextAlign.end,
-                            style: TextStyle(fontSize: 20,),
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
                           ),
                         ),
                       ),
@@ -406,7 +481,9 @@ class _PersonTileState extends State<PersonTile> {
                           width: double.infinity,
                           child: Text(
                             widget.inSchool ? "В школе" : "Не в школе",
-                            style: TextStyle(fontSize: 15,),
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
                           ),
                         ),
                       ),
@@ -423,7 +500,9 @@ class _PersonTileState extends State<PersonTile> {
                           child: Text(
                             widget.curator,
                             textAlign: TextAlign.end,
-                            style: TextStyle(fontSize: 15,),
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
                           ),
                         ),
                       ),
