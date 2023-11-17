@@ -7,6 +7,7 @@ void main() async{
       options: FirebaseOptions(
           apiKey: "AIzaSyCbzuhWcyuvbGg5tLE01P6Zbi1AL2XP5y0",
           authDomain: "nonsense-378e9.firebaseapp.com",
+
           projectId: "nonsense-378e9",
           storageBucket: "nonsense-378e9.appspot.com",
           messagingSenderId: "767035250430",
@@ -19,7 +20,7 @@ void main() async{
     theme: ThemeData(
       fontFamily: 'Futura',
     ),
-    home: LoginPage(),
+    home: PeopleList(),
     // Login()
   ));
 }

@@ -20,7 +20,7 @@ class _PeopleListState extends State<PeopleList> {
                 padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
                 child: TextField(
                   decoration: InputDecoration(
-                    hintText: 'Поиск курсов',
+                    hintText: 'Поиск людей',
                     suffixIcon: Icon(Icons.search),
                     contentPadding: EdgeInsets.all(10),
                     border: OutlineInputBorder(
