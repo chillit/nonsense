@@ -12,6 +12,7 @@ class shandet extends StatefulWidget {
 }
 
 class _shandetState extends State<shandet> {
+  bool isGRAY = false;
   final TextEditingController _searchController = TextEditingController();
   final DatabaseReference _database = FirebaseDatabase().reference().child('users');
   List<Map<String, dynamic>> _dataList = [];
@@ -45,59 +46,96 @@ class _shandetState extends State<shandet> {
         actions: <Widget>[],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.only(top: 15,bottom: 15),
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-              child: TextField(
-                controller: _searchController,
-                onChanged: (_) {
-                  setState(() {}); // Update the UI when the search text changes
-                },
-                decoration: InputDecoration(
-                  hintText: 'Поиск курсов',
-                  suffixIcon: Icon(Icons.search),
-                  contentPadding: EdgeInsets.all(10),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(
-                      style: BorderStyle.none,
-                      width: 0,
+              padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20.0,right: 20),
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: (_) {
+                    setState(() {}); // Update the UI when the search text changes
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Поиск',
+                    suffixIcon: Icon(Icons.search),
+                    contentPadding: EdgeInsets.all(10),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        style: BorderStyle.none,
+                        width: 0,
+                      ),
                     ),
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 242, 241, 247),
                   ),
-                  filled: true,
-                  fillColor: Color.fromARGB(255, 242, 241, 247),
                 ),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.all(10.0),
-                itemCount: _dataList.length,
-                itemBuilder: (context, index) {
-                  Map<String, dynamic> value = _dataList[index];
-
-                  // Filter the list based on the search text
-                  String fio = value['DisplayNameAll'].toString().toLowerCase();
-                  String searchText = _searchController.text.toLowerCase();
-                  if (!fio.contains(searchText) || value['Manager'] != widget.curator) {
-                    return SizedBox.shrink(); // Hide if not matching search text or manager is different
+            StreamBuilder(
+                stream: FirebaseDatabase.instance.ref().child('users').onValue,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
                   }
-                  return PersonTile(
-                    role: value["PostName"],
-                    maxin: value["MaxIn"],
-                    minin: value["MinIn"],
-                    maxout: value["MaxOut"],
-                    clas: value["DivisionName"],
-                    fio: value['DisplayNameAll'],
-                    inSchool: value['Status'] == "1",
-                    curator: value['Manager'],
+                  if (snapshot.data!.snapshot.value.runtimeType !=
+                      List<dynamic>) {
+                    return Center(
+                      child: Text('Ошибка'),
+                    );
+                  }
+                  List<dynamic> _dataList =
+                  snapshot.data?.snapshot.value as List<dynamic>;
+                  return Expanded(
+                    child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      padding: EdgeInsets.all(10.0),
+                      itemCount: _dataList.length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> value = _dataList[index];
+
+                        // Filter the list based on the search text
+                        String fio =
+                        value['DisplayNameAll'].toString().toLowerCase();
+                        String clas = value["DivisionName"].toString().toLowerCase();
+                        String searchText =
+                        _searchController.text.toLowerCase();
+                        if (!"${fio} ${clas}".contains(searchText)) {
+                          return Container(); // Hide if not matching search text
+                        }
+                        String curator =
+                        value['Manager'].toString().toLowerCase();
+                        String wCurator =
+                        widget.curator.toLowerCase();
+                        if(curator != wCurator){
+                          return Container();
+                        }
+
+                        isGRAY = !isGRAY;
+
+                        return PersonTile(
+                          index: index.toString(),
+                          isGray: isGRAY,
+                          role: value["PostName"],
+                          maxin: value["MaxIn"],
+                          minin: value["MinIn"],
+                          maxout: value["MaxOut"],
+                          clas: value["DivisionName"],
+                          fio: value['DisplayNameAll'],
+                          inSchool: value['Status'] != "1",
+                          curator: value['Manager'],
+                        );
+                      },
+                    ),
                   );
-                },
-              ),
-            ),
+                }),
           ],
         ),
       ),
@@ -107,103 +145,125 @@ class _shandetState extends State<shandet> {
 
 
 class PersonTile extends StatefulWidget {
-  const PersonTile({super.key, required this.fio, required this.inSchool, required this.curator, required this.clas, required this.maxin, required this.maxout, required this.minin, required this.role});
-  final String fio, curator,clas,maxin,maxout,minin,role;
+  PersonTile(
+      {super.key,
+        required this.index,
+        required this.isGray,
+        required this.fio,
+        required this.inSchool,
+        required this.curator,
+        required this.clas,
+        required this.maxin,
+        required this.maxout,
+        required this.minin,
+        required this.role});
+  final String fio, curator, clas, maxin, maxout, minin, role,index;
   final bool inSchool;
+  bool isGray;
   @override
   State<PersonTile> createState() => _PersonTileState();
 }
 
 class _PersonTileState extends State<PersonTile> {
+  late bool isChecked; // Initialize the isChecked variable
+
+  final DatabaseReference _databaseReference =
+  FirebaseDatabase.instance.reference();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize isChecked based on the inSchool property
+    isChecked = !widget.inSchool;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        showDialog(context: context, builder: (BuildContext context){
-          return PersonInfoDialog(fio: widget.fio, curator: widget.curator, inSchool: widget.inSchool,);
-        });
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return PersonInfoDialog(
+              fio: widget.fio,
+              curator: widget.curator,
+              inSchool: widget.inSchool,
+            );
+          },
+        );
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5,),
+        padding: const EdgeInsets.symmetric(
+          vertical: 0,
+        ),
         child: SizedBox(
           width: double.infinity,
           child: Material(
-            elevation: 4,
-            borderRadius: BorderRadius.circular(10),
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+              padding: EdgeInsets.only(top: 0, bottom: 0, right: 15),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Color.fromARGB(255, 242, 241, 247),
-                  border: Border.all(color: Colors.grey, width: 0.5)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                borderRadius: BorderRadius.circular(0),
+                color: widget.isGray
+                    ? Colors.grey[250]
+                    : Color.fromARGB(255, 242, 241, 247),
+                border: Border.all(color: Colors.transparent, width: 0),
+              ),
+              child: Row(
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            widget.fio,
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
+                  // Glowing stick
+                  Container(
+                    height: 70,
+                    width: 10,
+                    decoration: BoxDecoration(
+                      color: isChecked ? Colors.green : Colors.red,
+                      boxShadow: [
+                        BoxShadow(
+                          color: isChecked ? Colors.green : Colors.red,
+                          blurRadius: 0,
+                          spreadRadius: 0,
                         ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: SizedBox(
-                          width: double.infinity,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 3,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            'Куратор:',
-                            textAlign: TextAlign.end,
-                            style: TextStyle(fontSize: 20,),
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  SizedBox(
-                    height: 10,
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "${widget.fio} ${widget.clas}",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Text(
+                              isChecked ? "Не в школе" : "В школе",
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            SizedBox(width: 20),
+                            Text(
+                              'Куратор: ${widget.curator}',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 10,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            widget.inSchool ? "В школе" : "Не в школе",
-                            style: TextStyle(fontSize: 15,),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: SizedBox(
-                          width: double.infinity,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 5,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            widget.curator,
-                            textAlign: TextAlign.end,
-                            style: TextStyle(fontSize: 15,),
-                          ),
-                        ),
-                      ),
-                    ],
+                  Checkbox(
+                    value: isChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isChecked = value!;
+                        _databaseReference
+                            .child('users/${widget.index}/Status')
+                            .set(isChecked ? 0 : 1);
+                      });
+                    },
                   ),
                 ],
               ),

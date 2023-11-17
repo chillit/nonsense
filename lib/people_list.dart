@@ -117,9 +117,10 @@ class _PeopleListState extends State<PeopleList> {
                         // Filter the list based on the search text
                         String fio =
                             value['DisplayNameAll'].toString().toLowerCase();
+                        String clas = value["DivisionName"].toString().toLowerCase();
                         String searchText =
                             _searchController.text.toLowerCase();
-                        if (!fio.contains(searchText)) {
+                        if ("${fio} ${clas}".contains(searchText)) {
                           return Container(); // Hide if not matching search text
                         }
 
@@ -467,7 +468,7 @@ class _PersonTileState extends State<PersonTile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.fio,
+                          "${widget.fio} ${widget.clas}",
                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 5),
