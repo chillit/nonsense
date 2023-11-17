@@ -429,6 +429,11 @@ class _PersonTileState extends State<PersonTile> {
                 fio: widget.fio,
                 curator: widget.curator,
                 inSchool: widget.inSchool,
+                clas: widget.clas,
+                maxin: widget.maxin,
+                maxout: widget.maxout,
+                minin: widget.minin,
+                role: widget.role,
               );
             });
       },

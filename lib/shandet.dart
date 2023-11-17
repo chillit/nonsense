@@ -180,17 +180,15 @@ class _PersonTileState extends State<PersonTile> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return PersonInfoDialog(
-              fio: widget.fio,
-              curator: widget.curator,
-              inSchool: widget.inSchool,
-            );
-          },
-        );
+
+      onTap: (){
+        showDialog(context: context, builder: (BuildContext context){
+          return PersonInfoDialog(fio: widget.fio, curator: widget.curator, inSchool: widget.inSchool,clas: widget.clas,
+                maxin: widget.maxin,
+                maxout: widget.maxout,
+                minin: widget.minin,
+                role: widget.role,);
+        });
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(
