@@ -139,18 +139,18 @@ class PersonInfoDialog extends StatelessWidget {
                                           height: 20,
                                           width: 3,
                                           decoration: BoxDecoration(
-                                            color: inSchool ? Colors.green : Colors.red,
+                                            color: inSchool ?  Colors.red : Colors.green,
                                             boxShadow: inSchool
                                                 ? [
                                               BoxShadow(
-                                                color: Colors.green,
+                                                color: Colors.red,
                                                 blurRadius: 7.0,
                                                 spreadRadius: 2.0,
                                               ),
                                             ]
                                                 : [
                                               BoxShadow(
-                                                color: Colors.red,
+                                                color: Colors.green,
                                                 blurRadius: 7.0,
                                                 spreadRadius: 2.0,
                                               ),
