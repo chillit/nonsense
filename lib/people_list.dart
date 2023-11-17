@@ -320,6 +320,45 @@ class _PeopleListState extends State<PeopleList> {
             SizedBox(
               height: 15,
             ),
+            Padding(
+              padding: EdgeInsetsDirectional.only(start: 16, end: 16),
+              child: Divider(
+                thickness: 0.5,
+                color: Colors.grey[700],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: EdgeInsetsDirectional.only(start: 20, end: 20),
+              child: ElevatedButton(
+                onPressed: () {
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                  Colors.grey, // Замените на ваш цвет по вашему выбору
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Первая помощь',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w100,
+                        fontFamily: 'Futura',
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
             Row(
               children: [
                 SizedBox(
