@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:nonsense/people_list.dart';
 import 'package:nonsense/Login_page.dart';
+import 'package:nonsense/shan.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();  await Firebase.initializeApp(
       options: FirebaseOptions(
@@ -14,7 +15,7 @@ void main() async{
           appId: "1:706356993842:web:33aeedb99d2c40e0f7012b",
           measurementId: "G-G5NP5SBK8P")
   );
-  runApp(MyApp(home: PeopleList()));
+  runApp(MyApp(home: shan()));
 }
 class MyApp extends StatefulWidget {
   final Widget home;
