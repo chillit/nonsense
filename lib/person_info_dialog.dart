@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 
 class PersonInfoDialog extends StatelessWidget {
-  const PersonInfoDialog({super.key, required this.fio, required this.curator, required this.inSchool});
-  final String fio, curator;
+  const PersonInfoDialog(
+      {super.key,
+      required this.fio,
+      required this.curator,
+      required this.inSchool,
+      required this.clas,
+      required this.maxin,
+      required this.maxout,
+      required this.minin,
+      required this.role});
+  final String fio, curator, clas, maxin, maxout, minin, role;
   final bool inSchool;
   @override
   Widget build(BuildContext context) {
@@ -35,82 +44,83 @@ class PersonInfoDialog extends StatelessWidget {
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Align(
-                          alignment: AlignmentDirectional(0, -1),
-                          child: Material(
-                            color: Color.fromRGBO(47, 16, 91, 1),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(10),
                             ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Row(
+                            color: Color.fromRGBO(47, 16, 91, 1),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
                                   mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 10, 0, 14),
-                                      child: IconButton(
-                                        hoverColor: Colors.transparent,
-                                        color: Colors.transparent,
-                                        icon: Icon(
-                                          Icons.arrow_back_ios_rounded,
-                                          color: Colors.white,
-                                          size: 32,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
+                                    IconButton(
+                                      hoverColor: Colors.transparent,
+                                      color: Colors.transparent,
+                                      icon: Icon(
+                                        Icons.arrow_back_ios_rounded,
+                                        color: Colors.white,
+                                        size: 32,
                                       ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
                                     ),
                                     Expanded(
-                                      child: Padding(
-                                        padding:
-                                            EdgeInsetsDirectional.fromSTEB(
-                                                15, 15, 0, 17),
-                                        child: SizedBox(
-                                          height: 25,
-                                          width: double.infinity,
-                                          child: Text(
-                                            fio,
-                                            softWrap: true,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 24,
-
-                                            ),
-                                          ),
+                                      child: Text(
+                                        "$fio $clas",
+                                        softWrap: true,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 24,
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                         Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Color.fromRGBO(47, 16, 91, 1), // Color of the border
-                              width: 2, // Width of the border
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color.fromRGBO(
+                                    47, 16, 91, 1), // Color of the border
+                                width: 2,
+                              ),
+                              left: BorderSide(
+                                color: Color.fromRGBO(
+                                    47, 16, 91, 1), // Color of the border
+                                width: 2,
+                              ),
+                              right: BorderSide(
+                                color: Color.fromRGBO(
+                                    47, 16, 91, 1), // Color of the border
+                                width: 2,
+                              ),
                             ),
-
-                            borderRadius: BorderRadius.vertical(bottom:Radius.circular(10),),
+                            borderRadius: BorderRadius.vertical(
+                              bottom: Radius.circular(10),
+                            ),
                             color: Color.fromRGBO(47, 16, 91, 1),
                           ),
-
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 7,right: 7,bottom: 7),
+                            padding: const EdgeInsets.only(
+                                left: 7, right: 7, bottom: 7),
                             child: Container(
                               height: 180,
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.vertical(bottom:Radius.circular(10) ),
+                                borderRadius: BorderRadius.vertical(
+                                    bottom: Radius.circular(10)),
                               ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
@@ -123,7 +133,6 @@ class PersonInfoDialog extends StatelessWidget {
                                       child: Text(
                                         'Куратор: $curator',
                                         style: TextStyle(
-
                                           fontSize: 18,
                                         ),
                                       ),
@@ -139,27 +148,32 @@ class PersonInfoDialog extends StatelessWidget {
                                           height: 20,
                                           width: 3,
                                           decoration: BoxDecoration(
-                                            color: inSchool ?  Colors.red : Colors.green,
+                                            color: inSchool
+                                                ? Colors.red
+                                                : Colors.green,
                                             boxShadow: inSchool
                                                 ? [
-                                              BoxShadow(
-                                                color: Colors.red,
-                                                blurRadius: 7.0,
-                                                spreadRadius: 2.0,
-                                              ),
-                                            ]
+                                                    BoxShadow(
+                                                      color: Colors.red,
+                                                      blurRadius: 7.0,
+                                                      spreadRadius: 2.0,
+                                                    ),
+                                                  ]
                                                 : [
-                                              BoxShadow(
-                                                color: Colors.green,
-                                                blurRadius: 7.0,
-                                                spreadRadius: 2.0,
-                                              ),
-                                            ],
+                                                    BoxShadow(
+                                                      color: Colors.green,
+                                                      blurRadius: 7.0,
+                                                      spreadRadius: 2.0,
+                                                    ),
+                                                  ],
                                           ),
                                         ),
                                         SizedBox(width: 10),
                                         Text(
-                                          inSchool ? "В школе" : "Не в школе",
+                                          "$role " +
+                                              (inSchool
+                                                  ? "в школе"
+                                                  : "не в школе"),
                                           style: TextStyle(
                                             fontSize: 18,
                                           ),
@@ -167,6 +181,13 @@ class PersonInfoDialog extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                                  SizedBox(height: 10,),
+                                  Text(
+                                          'Первый вход: $minin',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                          ),
+                                        ),
                                 ],
                               ),
                             ),
