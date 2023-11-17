@@ -12,9 +12,9 @@ class shandet extends StatefulWidget {
 }
 
 class _shandetState extends State<shandet> {
-  bool isGRAY = false;
   final TextEditingController _searchController = TextEditingController();
-  final DatabaseReference _database = FirebaseDatabase().reference().child('users');
+  final DatabaseReference _database =
+      FirebaseDatabase().reference().child('users');
   List<Map<String, dynamic>> _dataList = [];
 
   @override
@@ -46,17 +46,19 @@ class _shandetState extends State<shandet> {
         actions: <Widget>[],
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 15,bottom: 15),
+        padding: const EdgeInsets.only(top: 15, bottom: 15),
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10),
               child: Padding(
-                padding: const EdgeInsets.only(left: 20.0,right: 20),
+                padding: const EdgeInsets.only(left: 20.0, right: 20),
                 child: TextField(
                   controller: _searchController,
                   onChanged: (_) {
-                    setState(() {}); // Update the UI when the search text changes
+                    setState(
+                        () {}); // Update the UI when the search text changes
                   },
                   decoration: InputDecoration(
                     hintText: 'Поиск',
@@ -92,7 +94,9 @@ class _shandetState extends State<shandet> {
                     );
                   }
                   List<dynamic> _dataList =
-                  snapshot.data?.snapshot.value as List<dynamic>;
+                      snapshot.data?.snapshot.value as List<dynamic>;
+
+                  bool isGRAY = false;
                   return Expanded(
                     child: ListView.builder(
                       physics: BouncingScrollPhysics(),
@@ -103,18 +107,18 @@ class _shandetState extends State<shandet> {
 
                         // Filter the list based on the search text
                         String fio =
-                        value['DisplayNameAll'].toString().toLowerCase();
-                        String clas = value["DivisionName"].toString().toLowerCase();
+                            value['DisplayNameAll'].toString().toLowerCase();
+                        String clas =
+                            value["DivisionName"].toString().toLowerCase();
                         String searchText =
-                        _searchController.text.toLowerCase();
+                            _searchController.text.toLowerCase();
                         if (!"${fio} ${clas}".contains(searchText)) {
                           return Container(); // Hide if not matching search text
                         }
                         String curator =
-                        value['Manager'].toString().toLowerCase();
-                        String wCurator =
-                        widget.curator.toLowerCase();
-                        if(curator != wCurator){
+                            value['Manager'].toString().toLowerCase();
+                        String wCurator = widget.curator.toLowerCase();
+                        if (curator != wCurator) {
                           return Container();
                         }
 
@@ -143,21 +147,20 @@ class _shandetState extends State<shandet> {
   }
 }
 
-
 class PersonTile extends StatefulWidget {
   PersonTile(
       {super.key,
-        required this.index,
-        required this.isGray,
-        required this.fio,
-        required this.inSchool,
-        required this.curator,
-        required this.clas,
-        required this.maxin,
-        required this.maxout,
-        required this.minin,
-        required this.role});
-  final String fio, curator, clas, maxin, maxout, minin, role,index;
+      required this.index,
+      required this.isGray,
+      required this.fio,
+      required this.inSchool,
+      required this.curator,
+      required this.clas,
+      required this.maxin,
+      required this.maxout,
+      required this.minin,
+      required this.role});
+  final String fio, curator, clas, maxin, maxout, minin, role, index;
   final bool inSchool;
   bool isGray;
   @override
@@ -168,7 +171,7 @@ class _PersonTileState extends State<PersonTile> {
   late bool isChecked; // Initialize the isChecked variable
 
   final DatabaseReference _databaseReference =
-  FirebaseDatabase.instance.reference();
+      FirebaseDatabase.instance.reference();
 
   @override
   void initState() {
@@ -180,15 +183,21 @@ class _PersonTileState extends State<PersonTile> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-
-      onTap: (){
-        showDialog(context: context, builder: (BuildContext context){
-          return PersonInfoDialog(fio: widget.fio, curator: widget.curator, inSchool: widget.inSchool,clas: widget.clas,
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return PersonInfoDialog(
+                fio: widget.fio,
+                curator: widget.curator,
+                inSchool: widget.inSchool,
+                clas: widget.clas,
                 maxin: widget.maxin,
                 maxout: widget.maxout,
                 minin: widget.minin,
-                role: widget.role,);
-        });
+                role: widget.role,
+              );
+            });
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(

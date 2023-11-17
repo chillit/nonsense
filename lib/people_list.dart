@@ -14,7 +14,6 @@ class _PeopleListState extends State<PeopleList> {
   final TextEditingController _searchController = TextEditingController();
   final DatabaseReference _database = FirebaseDatabase().reference().child('users');
   List<Map<String, dynamic>> _dataList = [];
-  bool isGRAY = false;
 
   @override
   void initState() {
@@ -106,6 +105,8 @@ class _PeopleListState extends State<PeopleList> {
                   }
                   List<dynamic> _dataList =
                       snapshot.data?.snapshot.value as List<dynamic>;
+
+                  bool isGRAY = false;
                   return Expanded(
                     child: ListView.builder(
                       physics: BouncingScrollPhysics(),
