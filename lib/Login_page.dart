@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:nonsense/Test.dart';
+import 'package:nonsense/people_list.dart';
 
 
 
@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => TEST_page()),
+        MaterialPageRoute(builder: (context) => PeopleList()),
       );
 
     } on FirebaseAuthException catch (e) {
@@ -335,7 +335,7 @@ class _LoginPageState extends State<LoginPage> {
                                   onTap: () {
                                     Navigator.pushReplacement(
                                       context,
-                                      MaterialPageRoute(builder: (context) => TEST_page()),
+                                      MaterialPageRoute(builder: (context) => PeopleList()),
                                     );
                                   },
                                 ),

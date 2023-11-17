@@ -5,25 +5,43 @@ import 'package:nonsense/Login_page.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();  await Firebase.initializeApp(
       options: FirebaseOptions(
-          apiKey: "AIzaSyCbzuhWcyuvbGg5tLE01P6Zbi1AL2XP5y0",
-          authDomain: "nonsense-378e9.firebaseapp.com",
-          projectId: "nonsense-378e9",
-          storageBucket: "nonsense-378e9.appspot.com",
-          messagingSenderId: "767035250430",
-          appId: "1:767035250430:web:098b4d8a8660fa67bc77af",
-          measurementId: "G-9LN8KYQ05P")
+          apiKey: "AIzaSyBR32KrGTpnRDYzGdESKXgzSi_puAuhV0o",
+          authDomain: "tswcd-1ddcb.firebaseapp.com",
+          databaseURL: "https://tswcd-1ddcb-default-rtdb.firebaseio.com",
+          projectId: "tswcd-1ddcb",
+          storageBucket: "tswcd-1ddcb.appspot.com",
+          messagingSenderId: "706356993842",
+          appId: "1:706356993842:web:33aeedb99d2c40e0f7012b",
+          measurementId: "G-G5NP5SBK8P")
   );
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: "NIS Security",
-    theme: ThemeData(
-      fontFamily: 'Futura',
-    ),
-    home: LoginPage(),
-    // Login()
-  ));
+  runApp(MyApp(home: PeopleList()));
+}
+class MyApp extends StatefulWidget {
+  final Widget home;
+
+  MyApp({required this.home});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
 }
 
+class _MyAppState extends State<MyApp> {
+
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+
+      title: 'NEskuchnoAta',
+      theme: ThemeData(
+        fontFamily: 'Futura',
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+
+      home: this.widget.home,
+    );
+  }
+}
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -43,13 +61,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
   bool isStudent = false; // Track whether the user is a student or not
   List<String> classes = ['7', '8', '9', '10', '11', '12'];
   List<String> letters = ['A', 'B', 'C', 'D', 'E'];
@@ -89,10 +100,6 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
           ],
         ),
       ),
@@ -118,23 +125,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
-              Wrap(
-                spacing: 8.0,
-                runSpacing: 16.0,
-                children: roles.map((role) => FilterChip(
-                  label: Text(role),
-                  selected: selectedRoles.contains(role),
-                  onSelected: (bool selected) {
-                    setState(() {
-                      if (selected) {
-                        selectedRoles.add(role);
-                      } else {
-                        selectedRoles.remove(role);
-                      }
-                    });
-                  },
-                )).toList(),
-              ),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 16.0,
+              children: roles.map((role) => FilterChip(
+                label: Text(role),
+                selected: selectedRoles.contains(role),
+                onSelected: (bool selected) {
+                  setState(() {
+                    if (selected) {
+                      selectedRoles.add(role);
+                    } else {
+                      selectedRoles.remove(role);
+                    }
+                  });
+                },
+              )).toList(),
+            ),
             if (isStudent) ...[
               SizedBox(height: 10),
               Padding(
@@ -280,11 +287,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }
