@@ -4,6 +4,7 @@ import 'package:nonsense/Instuctions.dart';
 import 'package:nonsense/people_list.dart';
 import 'package:nonsense/Login_page.dart';
 import 'package:nonsense/shan.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();  await Firebase.initializeApp(
       options: FirebaseOptions(
@@ -67,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> letters = ['A', 'B', 'C', 'D', 'E'];
   String? selectedClass = "7";
   String? selectedLetter;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   List<String> roles = ["Ученик", "Куратор", "Учитель", "Тех-персонал", "Администрация"];
   List<String> selectedRoles = [];
   void initState() {
@@ -265,6 +267,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsetsDirectional.only(start: 20,end: 20),
               child: ElevatedButton(onPressed:
                   (){
+
               },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red

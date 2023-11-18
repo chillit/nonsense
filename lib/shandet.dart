@@ -3,7 +3,9 @@ import 'package:nonsense/people_list.dart';
 import 'package:nonsense/person_info_dialog.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+import 'Login_page.dart';
 class shandet extends StatefulWidget {
   final String curator;
   const shandet({Key? key, required this.curator}) : super(key: key);
@@ -31,6 +33,7 @@ class _shandetState extends State<shandet> {
   List<String> selectedRoles = [];
   bool includeInternat = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -381,7 +384,13 @@ class _shandetState extends State<shandet> {
             Padding(
               padding: EdgeInsetsDirectional.only(start: 20, end: 20),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () async{
+                  _auth.currentUser != null?await _auth.signOut():null;
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -439,6 +448,7 @@ class _PersonTileState extends State<PersonTile> {
     // Initialize isChecked based on the inSchool property
     isChecked = !widget.inSchool;
   }
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -521,7 +531,7 @@ class _PersonTileState extends State<PersonTile> {
                       ],
                     ),
                   ),
-                  Container(
+                  _auth.currentUser != null?Container(
                     width: 80,
                     child: ElevatedButton(
                         onPressed: () {
@@ -536,7 +546,7 @@ class _PersonTileState extends State<PersonTile> {
                         style: ElevatedButton.styleFrom(backgroundColor: Color.fromRGBO(
                                     47, 16, 91, isChecked ? 1 : 0.5)),
                         ),
-                  ),
+                  ):Container(),
                 ],
               ),
             ),

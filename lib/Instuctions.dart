@@ -41,6 +41,7 @@ class _InstructionPageState extends State<InstructionPage> {
             ImageTextContainer(imagePath: 'assets/res3.png', text: "Вызвать скорую помощь.\n Позвоните по номеру 103",number: "4", isRight: true,),
             ImageTextContainer(imagePath: 'assets/res6.png', text: "Предложить пострадавшему обильное питье.",number: "5", isRight: false,),
             ImageTextContainer(imagePath: 'assets/res5.png', text: "Дать пострадавшему обезболивающее..",number: "6", isRight: true,),
+            SizedBox(height: 50),
             // Padding(
             //   padding: const EdgeInsets.only(top: 23.0,bottom: 40),
             //   child: GestureDetector(

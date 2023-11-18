@@ -448,8 +448,8 @@ class _PeopleListState extends State<PeopleList> {
             Padding(
               padding: EdgeInsetsDirectional.only(start: 20, end: 20),
               child: ElevatedButton(
-                onPressed: () {
-                  signOut();
+                onPressed: () async{
+                  _auth.currentUser != null?await _auth.signOut():null;
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => LoginPage()),
@@ -511,7 +511,7 @@ class _PersonTileState extends State<PersonTile> {
     // Initialize isChecked based on the inSchool property
     isChecked = !widget.inSchool;
   }
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -590,7 +590,7 @@ class _PersonTileState extends State<PersonTile> {
                       ],
                     ),
                   ),
-                  Container(
+                  _auth.currentUser != null?Container(
                     width: 80,
                     child: ElevatedButton(
                         onPressed: () {
@@ -605,7 +605,7 @@ class _PersonTileState extends State<PersonTile> {
                         style: ElevatedButton.styleFrom(backgroundColor: Color.fromRGBO(
                                     47, 16, 91, isChecked ? 1 : 0.5)),
                         ),
-                  ),
+                  ):Container(),
                 ],
               ),
             ),
