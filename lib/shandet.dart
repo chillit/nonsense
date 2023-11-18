@@ -521,16 +521,21 @@ class _PersonTileState extends State<PersonTile> {
                       ],
                     ),
                   ),
-                  Checkbox(
-                    value: isChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isChecked = value!;
-                        _databaseReference
-                            .child('users/${widget.index}/Status')
-                            .set(isChecked ? 0 : 1);
-                      });
-                    },
+                  Container(
+                    width: 80,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            isChecked = !isChecked;
+                            _databaseReference
+                                .child('users/${widget.index}/Status')
+                                .set(isChecked ? 0 : 1);
+                          });
+                        },
+                        child: Icon(Icons.output, color: Colors.white,),
+                        style: ElevatedButton.styleFrom(backgroundColor: Color.fromRGBO(
+                                    47, 16, 91, isChecked ? 1 : 0.5)),
+                        ),
                   ),
                 ],
               ),
