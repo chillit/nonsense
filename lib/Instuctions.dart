@@ -17,7 +17,7 @@ class _InstructionPageState extends State<InstructionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Color(0xFF7030A0),
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: Text("Первая помощь"),

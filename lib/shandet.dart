@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nonsense/people_list.dart';
 import 'package:nonsense/person_info_dialog.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -35,14 +36,27 @@ class _shandetState extends State<shandet> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: Color(0xFF7030A0),
         automaticallyImplyLeading: false,
-        title: Center(child: Text('NIS Security')),
+        centerTitle: true,
+        title: Center(child: Image.asset('assets/res10.png',width: 120,height: 130,)),
         leading: IconButton( // Use leading property instead of actions
           icon: Icon(Icons.menu),
           onPressed: () {
             _scaffoldKey.currentState!.openDrawer();
           },
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.arrow_forward_ios_sharp),
+            onPressed: () {
+              Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => PeopleList()),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 15, bottom: 15),

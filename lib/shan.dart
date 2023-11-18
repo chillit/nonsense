@@ -20,8 +20,9 @@ class _shanState extends State<shan> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        backgroundColor: Color(0xFF7030A0),
         automaticallyImplyLeading: false,
-        title: Center(child: Text('NIS Security')),
+        title: Center(child: Image.asset('assets/res10.png' ,width: 130 ,height: 120,)),
         leading: IconButton( // Use leading property instead of actions
           icon: Icon(Icons.arrow_back),
           onPressed: () {

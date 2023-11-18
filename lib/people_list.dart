@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:nonsense/Login_page.dart';
 import 'package:nonsense/person_info_dialog.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:nonsense/shan.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'Instuctions.dart';
 
 class PeopleList extends StatefulWidget {
@@ -22,6 +23,17 @@ class _PeopleListState extends State<PeopleList> {
   void initState() {
     super.initState();
   }
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  Future<void> signOut() async {
+    try {
+      await _auth.signOut();
+      // You can add any additional cleanup or navigation logic here
+    } catch (e) {
+      print("Error logging out: $e");
+    }
+  }
+
   bool InSchool = true; // Track whether the user is a student or not
   List<String> classes = ['7', '8', '9', '10', '11', '12'];
   List<String> letters = ['A', 'B', 'C', 'D', 'E'];
@@ -36,6 +48,7 @@ class _PeopleListState extends State<PeopleList> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: Color(0xFF7030A0),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -49,14 +62,14 @@ class _PeopleListState extends State<PeopleList> {
                     ),
                   );
                 },
-                child: Image.asset("assets/shan.png"),
+                child: Image.asset("assets/res7.png"),
               )
             ),
           ),
         ],
         centerTitle: true,
         automaticallyImplyLeading: false,
-        title: Center(child: Container(height:140, width:150, child: Image.asset('assets/logo2.png',fit: BoxFit.contain))),
+        title: Center(child: Container(height:120, width:130, child: Image.asset('assets/res10.png',fit: BoxFit.contain))),
         leading: IconButton( // Use leading property instead of actions
           icon: Icon(Icons.menu),
           onPressed: () {
@@ -425,7 +438,13 @@ class _PeopleListState extends State<PeopleList> {
             Padding(
               padding: EdgeInsetsDirectional.only(start: 20, end: 20),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  signOut();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

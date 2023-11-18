@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 
-      title: 'NIS Security',
+      title: 'NIS Guard',
       theme: ThemeData(
         fontFamily: 'Futura',
         primarySwatch: Colors.blue,
