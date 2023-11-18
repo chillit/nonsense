@@ -17,7 +17,7 @@ void main() async{
           appId: "1:706356993842:web:33aeedb99d2c40e0f7012b",
           measurementId: "G-G5NP5SBK8P")
   );
-  runApp(MyApp(home: LoginPage()));
+  runApp(MyApp(home: PeopleList()));
 }
 class MyApp extends StatefulWidget {
   final Widget home;
