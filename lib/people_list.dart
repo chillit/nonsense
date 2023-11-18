@@ -4,6 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:nonsense/shan.dart';
 
+import 'Instuctions.dart';
+
 class PeopleList extends StatefulWidget {
   const PeopleList({Key? key}) : super(key: key);
 
@@ -353,6 +355,13 @@ class _PeopleListState extends State<PeopleList> {
               padding: EdgeInsetsDirectional.only(start: 20, end: 20),
               child: ElevatedButton(
                 onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => InstructionPage(),
+                    ),
+                  );
+
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
