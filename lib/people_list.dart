@@ -15,19 +15,27 @@ class PeopleList extends StatefulWidget {
 
 class _PeopleListState extends State<PeopleList> {
   final TextEditingController _searchController = TextEditingController();
-  final DatabaseReference _database = FirebaseDatabase().reference().child('users');
+  final DatabaseReference _database =
+      FirebaseDatabase().reference().child('users');
   List<Map<String, dynamic>> _dataList = [];
 
   @override
   void initState() {
     super.initState();
   }
+
   bool InSchool = true; // Track whether the user is a student or not
   List<String> classes = ['7', '8', '9', '10', '11', '12'];
   List<String> letters = ['A', 'B', 'C', 'D', 'E'];
   String? selectedClass;
   String? selectedLetter;
-  List<String> roles = ["Ученик", "Куратор", "Учитель", "Тех-персонал", "Администрация"];
+  List<String> roles = [
+    "Ученик",
+    "Куратор",
+    "Учитель",
+    "Тех-персонал",
+    "Администрация"
+  ];
   List<String> selectedRoles = [];
   bool includeInternat = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -40,24 +48,28 @@ class _PeopleListState extends State<PeopleList> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
-              child: GestureDetector(
-                onTap: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => shan(),
-                    ),
-                  );
-                },
-                child: Image.asset("assets/shan.png"),
-              )
-            ),
+                child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => shan(),
+                  ),
+                );
+              },
+              child: Image.asset("assets/shan.png"),
+            )),
           ),
         ],
         centerTitle: true,
         automaticallyImplyLeading: false,
-        title: Center(child: Container(height:140, width:150, child: Image.asset('assets/logo2.png',fit: BoxFit.contain))),
-        leading: IconButton( // Use leading property instead of actions
+        title: Center(
+            child: Container(
+                height: 140,
+                width: 150,
+                child: Image.asset('assets/logo2.png', fit: BoxFit.contain))),
+        leading: IconButton(
+          // Use leading property instead of actions
           icon: Icon(Icons.menu),
           onPressed: () {
             _scaffoldKey.currentState!.openDrawer();
@@ -65,17 +77,19 @@ class _PeopleListState extends State<PeopleList> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 15,bottom: 15),
+        padding: const EdgeInsets.only(top: 15, bottom: 15),
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 0.0, vertical: 10),
               child: Padding(
-                padding: const EdgeInsets.only(left: 20.0,right: 20),
+                padding: const EdgeInsets.only(left: 20.0, right: 20),
                 child: TextField(
                   controller: _searchController,
                   onChanged: (_) {
-                    setState(() {}); // Update the UI when the search text changes
+                    setState(
+                        () {}); // Update the UI when the search text changes
                   },
                   decoration: InputDecoration(
                     hintText: 'Поиск',
@@ -125,7 +139,8 @@ class _PeopleListState extends State<PeopleList> {
                         // Filter the list based on the search text
                         String fio =
                             value['DisplayNameAll'].toString().toLowerCase();
-                        String clas = value["DivisionName"].toString().toLowerCase();
+                        String clas =
+                            value["DivisionName"].toString().toLowerCase();
                         String searchText =
                             _searchController.text.toLowerCase();
                         if (!"${fio} ${clas}".contains(searchText)) {
@@ -136,8 +151,9 @@ class _PeopleListState extends State<PeopleList> {
                         String combinedClass = "$selectedClass$selectedLetter";
 
                         // Filter based on selected class
-                        if ((selectedRoles.contains('Ученик') || selectedRoles.contains('Ученик инт'))
-                          && selectedClass != null &&
+                        if ((selectedRoles.contains('Ученик') ||
+                                selectedRoles.contains('Ученик инт')) &&
+                            selectedClass != null &&
                             selectedLetter != null &&
                             combinedClass != value["DivisionName"]) {
                           return Container();
@@ -361,11 +377,10 @@ class _PeopleListState extends State<PeopleList> {
                       builder: (context) => InstructionPage(),
                     ),
                   );
-
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                  Colors.grey, // Замените на ваш цвет по вашему выбору
+                      Colors.grey, // Замените на ваш цвет по вашему выбору
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -454,7 +469,7 @@ class _PeopleListState extends State<PeopleList> {
 class PersonTile extends StatefulWidget {
   PersonTile(
       {super.key,
-        required this.isGray,
+      required this.isGray,
       required this.fio,
       required this.inSchool,
       required this.curator,
@@ -462,7 +477,8 @@ class PersonTile extends StatefulWidget {
       required this.maxin,
       required this.maxout,
       required this.minin,
-      required this.role, required this.index});
+      required this.role,
+      required this.index});
   final String fio, curator, clas, maxin, maxout, minin, role, index;
   final bool inSchool;
   bool isGray;
@@ -474,14 +490,13 @@ class _PersonTileState extends State<PersonTile> {
   late bool isChecked;
 
   final DatabaseReference _databaseReference =
-  FirebaseDatabase.instance.reference();
+      FirebaseDatabase.instance.reference();
   @override
   void initState() {
     super.initState();
     // Initialize isChecked based on the inSchool property
     isChecked = !widget.inSchool;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -510,10 +525,12 @@ class _PersonTileState extends State<PersonTile> {
           width: double.infinity,
           child: Material(
             child: Container(
-              padding: EdgeInsets.only(top: 0,bottom: 0,right: 15),
+              padding: EdgeInsets.only(top: 0, bottom: 0, right: 15),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(0),
-                  color: widget.isGray?Colors.grey[250]:Color.fromARGB(255, 242, 241, 247),
+                  color: widget.isGray
+                      ? Colors.grey[250]
+                      : Color.fromARGB(255, 242, 241, 247),
                   border: Border.all(color: Colors.transparent, width: 0)),
               child: Row(
                 children: [
@@ -522,10 +539,10 @@ class _PersonTileState extends State<PersonTile> {
                     height: 70,
                     width: 10,
                     decoration: BoxDecoration(
-                      color: isChecked ?  Colors.red: Colors.green,
+                      color: isChecked ? Colors.red : Colors.green,
                       boxShadow: [
                         BoxShadow(
-                          color: widget.inSchool ?  Colors.red :Colors.green ,
+                          color: widget.inSchool ? Colors.red : Colors.green,
                           blurRadius: 0,
                           spreadRadius: 0,
                         ),
@@ -539,7 +556,8 @@ class _PersonTileState extends State<PersonTile> {
                       children: [
                         Text(
                           "${widget.fio} ${widget.clas}",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(height: 5),
                         Row(
@@ -558,16 +576,21 @@ class _PersonTileState extends State<PersonTile> {
                       ],
                     ),
                   ),
-                  Checkbox(
-                    value: isChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        isChecked = value!;
-                        _databaseReference
-                            .child('users/${widget.index}/Status')
-                            .set(isChecked ? 0 : 1);
-                      });
-                    },
+                  Container(
+                    width: 80,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            isChecked = !isChecked;
+                            _databaseReference
+                                .child('users/${widget.index}/Status')
+                                .set(isChecked ? 0 : 1);
+                          });
+                        },
+                        child: Icon(Icons.output, color: Colors.white,),
+                        style: ElevatedButton.styleFrom(backgroundColor: Color.fromRGBO(
+                                    47, 16, 91, isChecked ? 1 : 0.5)),
+                        ),
                   ),
                 ],
               ),
