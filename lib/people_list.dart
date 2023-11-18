@@ -49,6 +49,15 @@ class _PeopleListState extends State<PeopleList> {
   ];
   List<String> selectedRoles = [];
   bool includeInternat = true;
+  int numberOfPeopleInSchool = 0;
+
+  // Function to update the count of people in school
+  void updateNumberOfPeopleInSchool(List<Map<String, dynamic>> dataList) {
+    numberOfPeopleInSchool = dataList
+        .where((value) => value['Status'] == "1")
+        .toList()
+        .length;
+  }
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -57,6 +66,15 @@ class _PeopleListState extends State<PeopleList> {
       appBar: AppBar(
         backgroundColor: Color(0xFF7030A0),
         actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Text(
+                'В школе: $numberOfPeopleInSchool',
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
@@ -132,8 +150,14 @@ class _PeopleListState extends State<PeopleList> {
                       child: Text('Ошибка'),
                     );
                   }
-                  List<dynamic> _dataList =
-                      snapshot.data?.snapshot.value as List<dynamic>;
+                  List<Map<String, dynamic>> _dataList = [];
+                  if (snapshot.data!.snapshot.value is List) {
+                    _dataList = (snapshot.data!.snapshot.value as List)
+                        .cast<Map<String, dynamic>>();
+                  }
+
+                  // Update the count of people in school
+                  updateNumberOfPeopleInSchool(_dataList);
 
                   bool isGRAY = false;
                   return Expanded(
@@ -177,7 +201,9 @@ class _PeopleListState extends State<PeopleList> {
                         if (InSchool && value['Status'] == "1") {
                           return Container();
                         }
-
+                        if (value['Status'] == "1") {
+                          numberOfPeopleInSchool++;
+                        }
                         isGRAY = !isGRAY;
 
                         return PersonTile(
