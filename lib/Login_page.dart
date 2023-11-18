@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   void signUserIn(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: "admin@gmail.com", password: passwordcontroller.text);
+          email: "admin@gmail.com", password: passwordcontroller.text.trim());
 
       Navigator.push(
         context,
@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(67.0),
                                     child: Image.asset(
-                                      'assets/images/SkuchnoAta.png',
+                                      'assets/logo.png',
                                       fit: BoxFit.contain,
                                     ),
                                   ),
@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                                         borderRadius: BorderRadius.circular(67.0),
                                         child: Image.asset(
 
-                                          'assets/images/SkuchnoAta.png',
+                                          'assets/logo.png',
                                           fit: BoxFit.contain,
                                         ),
                                       ),
