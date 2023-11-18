@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nonsense/person_info_dialog.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:nonsense/shan.dart';
 
 class PeopleList extends StatefulWidget {
   const PeopleList({Key? key}) : super(key: key);
@@ -33,6 +34,24 @@ class _PeopleListState extends State<PeopleList> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => shan(),
+                    ),
+                  );
+                },
+                child: Image.asset("assets/shan.png"),
+              )
+            ),
+          ),
+        ],
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: Center(child: Text('NIS Security')),
